@@ -363,11 +363,15 @@ newproc()
 	 * checked for the existence of a slot.
 	 */
 retry:
+    // mpid is process id.
+    // mpid increments when creating new process.
 	mpid++;
 	if(mpid < 0) {
 		mpid = 0;
 		goto retry;
 	}
+
+    // Trying to find an empty proc and duplicated mpid.
 	for(rpp = &proc[0]; rpp < &proc[NPROC]; rpp++) {
 		if(rpp->p_stat == NULL && p==NULL)
 			p = rpp;
@@ -381,6 +385,7 @@ retry:
 	 * make proc entry for new proc
 	 */
 
+    // rip is a parent process.
 	rip = u.u_procp;
 	up = rip;
 	rpp->p_stat = SRUN;
@@ -398,6 +403,7 @@ retry:
 	 * where needed
 	 */
 
+    // Reference counter increments.
 	for(rip = &u.u_ofile[0]; rip < &u.u_ofile[NOFILE];)
 		if((rpp = *rip++) != NULL)
 			rpp->f_count++;
@@ -413,7 +419,9 @@ retry:
 	 */
 	savu(u.u_rsav);
 	rpp = p;
+    // Restore at the end of function.
 	u.u_procp = rpp;
+    // Retreat up(Parent process).
 	rip = up;
 	n = rip->p_size;
 	a1 = rip->p_addr;
@@ -440,6 +448,7 @@ retry:
 			copyseg(a1++, a2++);
 	}
 	u.u_procp = rip;
+    // This line means that return value is 1 when processing parent process.
 	return(0);
 }
 

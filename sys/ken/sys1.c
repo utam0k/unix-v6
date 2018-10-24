@@ -331,6 +331,8 @@ loop:
  */
 fork()
 {
+    // p1: Parent
+    // p2: Child
 	register struct proc *p1, *p2;
 
 	p1 = u.u_procp;
@@ -341,7 +343,9 @@ fork()
 	goto out;
 
 found:
+    // Parent process doesn't go to a block of if because of return 0 when processing parent process.
 	if(newproc()) {
+        // This block is processing of child process.
 		u.u_ar0[R0] = p1->p_pid;
 		u.u_cstime[0] = 0;
 		u.u_cstime[1] = 0;
@@ -351,9 +355,12 @@ found:
 		u.u_utime = 0;
 		return;
 	}
+    
+    // Set return value.
 	u.u_ar0[R0] = p2->p_pid;
 
 out:
+    // Proceed program counter.
 	u.u_ar0[R7] =+ 2;
 }
 

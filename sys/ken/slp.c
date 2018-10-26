@@ -26,18 +26,23 @@ sleep(chan, pri)
 {
 	register *rp, s;
 
+    // Save PSW.
 	s = PS->integ;
 	rp = u.u_procp;
 	if(pri >= 0) {
+        // Check signal.
 		if(issig())
 			goto psig;
+        // Suppress interrupts.
 		spl6();
 		rp->p_wchan = chan;
 		rp->p_stat = SWAIT;
 		rp->p_pri = pri;
 		spl0();
+        // Are there not subject to swap out.
 		if(runin != 0) {
 			runin = 0;
+            // Wake up scheduler.
 			wakeup(&runin);
 		}
 		swtch();
@@ -51,6 +56,7 @@ sleep(chan, pri)
 		spl0();
 		swtch();
 	}
+    // Load PSW.
 	PS->integ = s;
 	return;
 

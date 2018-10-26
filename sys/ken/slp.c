@@ -454,7 +454,7 @@ retry:
 			copyseg(a1++, a2++);
 	}
 	u.u_procp = rip;
-    // This line means that return value is 1 when processing parent process.
+    // This line means that return value is 0 when processing parent process.
 	return(0);
 }
 

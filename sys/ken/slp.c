@@ -285,6 +285,7 @@ swtch()
 	retu(proc[0].p_addr);
 
 loop:
+    // Parameter init
 	runrun = 0;
 	rp = p;
 	p = NULL;
@@ -313,6 +314,7 @@ loop:
 		goto loop;
 	}
 	rp = p;
+    // curpri is the priority of the process running on the global variable
 	curpri = n;
 	/*
 	 * Switch to stack of the new process and set up
